@@ -19,10 +19,7 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-// Route::get('posts',[PostController::class,'index']);
+Route::get('charts',[PostController::class,'chartPosts']);
 
 Route::apiResource('categories',CategoryController::class);
 
@@ -41,10 +38,12 @@ Route::controller(UserController::class)->group(function(){
 
       Route::get('user','details');
 });
-
 Route::middleware('auth:api')->group(function(){
 
       Route::post('comment/create',[CommentController::class,'store']);
+      
+    
+
 
       Route::controller(UserController::class)->group(function(){
 
@@ -60,7 +59,8 @@ Route::group(['prefix'=>'/admin','middleware'=>'auth:api'], function () {
      
 
       Route::get('user',[UserController::class,'details']);
-     
+      Route::delete('deleteComment/{id}',[CommentController::class,'destroy']);
+
       Route::post('update',[AdminController::class,'update']);
      
       Route::controller(AdminController::class)->group(function(){

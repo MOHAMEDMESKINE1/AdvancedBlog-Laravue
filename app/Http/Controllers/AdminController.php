@@ -64,12 +64,13 @@ class AdminController extends Controller
     }
     public function getPosts(){
 
-        $posts = Post::latest()->with('user')->with('category')->get();
+        $posts = Post::latest()->get();
      
         foreach($posts as $post){
             $post->setAttribute('added_at',$post->created_at->diffForHumans());
             $post->setAttribute('comments_count',$post->comments->count());
-            // $post->setAttribute('category',$post->category);
+            $post->setAttribute('category',$post->category);
+            $post->setAttribute('user',$post->category);
         }
         return response()->json($posts);
     }

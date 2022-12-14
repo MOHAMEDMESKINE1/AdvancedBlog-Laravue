@@ -4,7 +4,12 @@
         ...searching for  post
     </div>
     <!-- post -->
-    <div class="col-md-8" v-else>
+    <transition-group tag="div" 
+    appear
+    @before-enter="beforeEnter"
+    @enter="Enter"
+    class="col-md-8"
+     v-else>
         <div class="media simple-post bg-white shadow-sm" v-for="post in posts" :key="post.id">
             <img class="mr-3" :src="'assets/img/'+post.image" alt="Generic placeholder image">
             <div class="media-body">
@@ -29,7 +34,7 @@
                 </ul>   
             </div>
         </div>
-    </div>
+    </transition-group>
     <!-- search -->
    <div class="col-md-4">
     <div class="card my-4">
@@ -62,6 +67,7 @@
 
 import axios from 'axios'
 import categories from './Categories.vue';
+import gsap from 'gsap'
 export default {
     components : {
         categories,
@@ -70,7 +76,8 @@ export default {
         return {
             posts:{},
             isSearching:false,
-            searchPost:''
+            searchPost:'',
+
            
         }
     },
@@ -86,7 +93,7 @@ export default {
                 })
                 .catch(err => console.log(err))
 
-                console.log(query);
+               
            }else{
             
                 let oldPosts = JSON.parse(localStorage.getItem('posts'))
@@ -96,6 +103,7 @@ export default {
                 this.isSearching = false;
 
         }
+       
     },
     mounted(){
         this.getPosts();
@@ -110,7 +118,20 @@ export default {
                         localStorage.setItem('posts',JSON.stringify(this.posts))
                     })
                     .catch(err=> console.log(err))
-            }
+            },
+            beforeEnter(el){
+            el.style.opacity= 0
+            el.style.transform= 'translateY(100px)'
+        },
+        Enter(el,done){
+            gsap.to(el,{
+            opacity:1,
+            y:0,
+            duration:0.8,
+            onComplete:done,
+            delay:el.dataset.index *0.2
+            })
+        }
     }
 }
 </script>

@@ -16,6 +16,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        
         // $posts = Post::latest()->with('user')->paginate(1);
         $posts = Post::latest()->with('user')->get();
      
@@ -23,10 +24,17 @@ class PostController extends Controller
                 $post->setAttribute('added_at',$post->created_at->diffForHumans());
                 $post->setAttribute('comments_count',$post->comments->count());
             }
+           
             return response()->json($posts);
         
       
     }
+    // public function chartPosts(){
+        
+    //     $chart_posts=Post::orderBy('id', 'DESC')->get();
+
+    //     return   response()->json($chart_posts);
+    // }
     public function searchPosts($query){
         $posts = Post::where('title','like','%'.$query.'%')->with('user')->get();
         

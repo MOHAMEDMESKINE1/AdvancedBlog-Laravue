@@ -1,6 +1,8 @@
 <template>
-<div>
-    <div class="col-md-9">
+  
+<div class="my-5">
+   
+    <div class="col-md-12 ">
 
       <!-- Title -->
       <h1 class="mt-4" v-text="post.title"></h1>
@@ -19,7 +21,7 @@
       <hr>
 
       <!-- Preview Image -->
-      <img class="img-fluid rounded" :src="'/assets/img/'+post.image" width ='500' alt="image">
+      <img class="img-fluid rounded" :src="'/assets/img/'+post.image" width ='900' alt="image">
 
       <hr>
 
@@ -33,14 +35,24 @@
         <div class="card-body">
             <input type="hidden" name="" v-model="post_id">
             <div class="form-group">
-              <textarea class="form-control" v-model="body" rows="3"></textarea>
+              <textarea class="form-control shadow-none" v-model="body" rows="3"></textarea>
             </div>
+             <!-- Error Message  -->
+             <div v-if="body.length<=0" class="alert text-info alert-dismissible fade show" role="alert">
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    
+                      <strong class="text-danger"> Hey!</strong>  Make a comment &#128513;
+              </div>
+
+
+
+
             <button type="submit" @click.prevent="addComment" class="btn btn-primary">Submit</button>
         </div>
       </div>
 
       <!-- Single Comment -->
-      <div class="media mb-4 comment" v-for="comment in post.comments" :key="comment.id">
+      <div class="media mb-4 shadow-sm rounded comment p-2" v-for="comment in post.comments" :key="comment.id">
         <img class="d-flex mr-3 rounded-circle" 
         :src="'/assets/img/'+comment.user.profile_img" 
         v-if="comment.user.profile_img" width="90"  alt="profile user">
@@ -48,8 +60,12 @@
           <h4 class="text-success" v-text="comment.user.name"></h4>
           <p class="mt-0" v-text="comment.body"></p>
         </div>
+        <div class="d-flex justify-content-end">
+          <button @click="deleteComment(comment.id)" class="border-0 bg-white fw-bold fs-3">
+            <span class="text-danger">&times;</span>
+        </button>
+        </div>
       </div>
-
     
 
     </div>
@@ -58,24 +74,29 @@
 
 <script>
 import axios from 'axios'
+
 export default {
+ 
 
   data(){
     return {
         post:'',
         body:'',
         post_id:'',
-        comments : []
+        comments : [],
+        showToast:false
     }
   },
 
   mounted(){
     this.getPosts();
     this.updateToken();
+ 
   },
   computed : {
 
       isLogged(){
+       
           return this.$store.getters.isLogged
       }
   },
@@ -94,32 +115,49 @@ export default {
     },
     addComment(){
 
-      if(this.isLogged){
-        let {post_id,body} = this
-        axios.post('/api/comment/create',{
-          post_id:post_id,
-          body:body
-        })
-        .then(res => {
-          console.log(res.data)
-
-          // add comment at first line
-          this.comments.unshift(res.data)
-          // animation part after adding a comment
-          document.querySelectorAll('.comment')[0].classList.add('new')
-          // remove animation for other old comments
-          document.querySelectorAll('.comment').forEach(item=> item.classList.remove('new'))
+      if(!this.body.length<=0){
+          if(this.isLogged){
+            let {post_id,body} = this
+            axios.post('/api/comment/create',{
+              post_id:post_id,
+              body:body
+          })
+          .then(res => {
+            
+            this.body=""
+              // add comment at first line
+            this.comments.unshift(res.data)
         
+            // animation part after adding a comment
+            document.querySelectorAll('.comment')[0].classList.add('new')
+            // remove animation for other old comments
+            document.querySelectorAll('.comment').forEach(item=> item.classList.remove('new'))
           
-          // get posts 
-          this.getPosts();
-        })
+              // get posts 
+              this.getPosts();
+          
+            
+          })
+        }else{
+          alert('Your Not Logged !')
+        }
       }else{
-        alert('your not logged')
+    
+        // this.showToast=true
+        console.log("empty fields");
       }
      
       
 
+    },
+    deleteComment(id){
+      if(confirm('Are You Sure ?')){
+        axios.delete(`/api/admin/deleteComment/${id}`)
+        .then(res =>{
+        
+          this.getPosts();
+        })
+      }
     },
     updateToken(){
       
@@ -154,6 +192,8 @@ export default {
   animation-iteration-count: 1;
   -webkit-animation-iteration-count: 1;
 }
+
+
 @keyframes newComment {
   from {background-color: rgb(119, 223, 171);}
   to{background-color: inherit;}

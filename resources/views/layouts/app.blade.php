@@ -22,17 +22,18 @@
   <link href="{{asset('assets/css/added_style.css')}}" rel="stylesheet">
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
    
     <div id="app">
-      {{-- @extends('layouts.header') --}}
+    
        
        @yield('content')
-
+     
        
-       {{-- @extends('layouts.footer') --}}
+   
     </div>
 
   
@@ -43,17 +44,7 @@
     <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('js/app.js')}}" defer ></script>
     <script>
-       $(document).ready(function(){
-        //   $('.switch-tologin-modal').on('click',function(){
-        //     $('#register-modal').modal('hide');
-        //     $('#login-modal').modal('show');
-        //   })
-        //   $('.switch-toregister-modal').on('click',function(){
-        //     $('#login-modal').modal('hide');
-        //     $('#register-modal').modal('show');
-        //   })
        
-        })
       </script>
 </body>
 </html>

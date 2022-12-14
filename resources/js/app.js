@@ -1,7 +1,6 @@
 import './bootstrap';
 
 import { createApp } from 'vue';
-
 import router from './routes';
 import store from './store';
 
@@ -18,14 +17,15 @@ import footerCompoenet from './components/Footer.vue';
 
 
 
-// method 1
+
+// // method 1
 const app = createApp({
     components: { 
        Posts ,
        HomeComponent,
     //    pagination,
     HeaderComponent,
-    footerCompoenet
+    footerCompoenet,
     }
     
 })

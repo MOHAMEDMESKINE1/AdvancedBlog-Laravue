@@ -20,8 +20,11 @@
         "vue": "^3.2.36"
     },
     "dependencies": {
+        "chart.js": "^4.0.1",
+        "gsap": "^3.11.3",
         "laravel-vue-pagination": "^4.0.0",
         "v-pagination-3": "^0.1.7",
+        "vue-chartjs": "^5.0.1",
         "vue-loader": "^17.0.1",
         "vue-router": "^4.1.6",
         "vuex": "^4.0.2"
